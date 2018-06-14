@@ -7,7 +7,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Dusk\Browser;
 use LaravelZero\Framework\Commands\Command;
 
-class ING extends YNAB implements Contracts\ExportsCsv
+class ING extends Command implements Contracts\ExportsCsv, Contracts\YNAB
 {
     private $file;
 
@@ -62,12 +62,14 @@ class ING extends YNAB implements Contracts\ExportsCsv
             $originalBrowser = $browser->getOriginalBrowser();
             $url = $originalBrowser->driver->getCommandExecutor()->getAddressOfRemoteServer();
             $uri = '/session/' . $originalBrowser->driver->getSessionID() . '/chromium/send_command';
+
             $body = [
                 'cmd'    => 'Page.setDownloadBehavior',
                 'params' => ['behavior' => 'allow', 'downloadPath' => storage_path() . '/app'],
             ];
 
-            (new \GuzzleHttp\Client())->post($url . $uri, ['body' => json_encode($body)]);
+            $response = (new \GuzzleHttp\Client())->post($url . $uri, ['body' => json_encode($body)]);
+
             $this->info("Success!");
         });
     }
@@ -84,7 +86,9 @@ class ING extends YNAB implements Contracts\ExportsCsv
                        ->type('#username', getenv('ING_USERNAME'))
                        ->type('#password', getenv('ING_PASSWORD'))
                        ->click('#submitButton')
+                       ->pause(1000)
                        ->visit('https://mijn.ing.nl/particulier/overzichten/download/index')
+                       ->pause(2000)
                        ->click('#accounts')//accounts select
                        ->click('#accounts > ul > li:nth-child(3) > label > div > div')// select account
                        ->type('#startDate-input', '01-01-2000')// start date export
