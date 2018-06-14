@@ -12,7 +12,7 @@ https://www.youneedabudget.com/
 $ git clone git@github.com:bad33ndj3/YNAB-export-ing.git
 $ composer install
 ```
-
+or download from https://github.com/bad33ndj3/YNAB-export-ing/releases
 ## Usage
 
 ```
