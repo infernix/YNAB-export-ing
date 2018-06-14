@@ -16,7 +16,7 @@ $ composer install
 ## Usage
 
 ```
-$ php application ynab:ing
+$ php ynab ing
 ```
 
 ## Contribute
